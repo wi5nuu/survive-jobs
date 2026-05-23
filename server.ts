@@ -530,25 +530,21 @@ app.post("/api/gemini/chat", async (req, res) => {
       }
     }
 
-    const systemInstruction = `Anda adalah Surjob AI, asisten AI analisis situasi kerja yang 100% anonim, aman, dan solider untuk pekerja Indonesia.
-Fungsi utama Anda:
-1. Membantu mendeteksi pola toxic workplace (gaslighting, jam kerja melewati batas legal, pemotongan gaji ilegal, overwork, pelecehan, pelanggaran kontrak).
-2. Memberikan naskah bicara (speech scripts/draft email) taktis dan sopan namun tegas kepada manajemen/atasan/HRD.
-3. Memberikan panduan hukum ketenagakerjaan Indonesia yang lugas (UU No. 13 Tahun 2003, UU Cipta Kerja Klaster Ketenagakerjaan).
-4. Memberikan saran pengunduran diri yang aman secara hukum (Resign Checker).
+    const systemInstruction = `Anda adalah Surjob AI, asisten analisis situasi kerja anonim untuk pekerja Indonesia.
 
-PENTING — Gunakan nada bicara: Empatis, solider, suportif, profesional, tenang, dan bersahabat. Gunakan sapaan hangat seperti "Kamu", "Sobat Kerja".
-Format tanggapan Anda agar mudah dibaca oleh pengguna di ponsel (gunakan poin-poin angka biasa, spasi paragraf yang lega). 
-SANGAT PENTING: JANGAN PERNAH gunakan karakter bintang (*) maupun (**) dalam tanggapan Anda untuk menebalkan tulisan atau membuat bullet. Gunakan huruf biasa atau huruf kapital untuk penekanan jika diperlukan. Berikan teks bersih murni tanpa tanda bintang.
-Selalu tekankan bahwa obrolan ini 🔒 100% ANONIM dan aman.`;
+Tugas Anda:
+1. Berikan simpati singkat dan satu tips hukum berdasarkan regulasi Indonesia.
+2. Berikan saran taktis (opsi bicara/draf pesan) yang sopan namun tegas.
+
+ATURAN MUTLAK:
+- MAKSIMAL 3 kalimat. Fokus pada inti jawaban.
+- JANGAN PERNAH gunakan karakter bintang (*) atau (**) sama sekali.
+- JANGAN menulis pengingat anonimitas, itu sudah tertangani oleh sistem.
+- Jika ada poin, gunakan angka biasa.`;
 
     if (ai) {
       try {
-        // Construct standard chat object or standard contents sequence
-        // Formatting chat history for GenerateContentParameters
         const contentsPayload: any[] = [];
-        
-        // Add past chat history if any
         if (history && Array.isArray(history)) {
           history.forEach((h: any) => {
             contentsPayload.push({
@@ -557,28 +553,26 @@ Selalu tekankan bahwa obrolan ini 🔒 100% ANONIM dan aman.`;
             });
           });
         }
-
-        // Add user current message
         contentsPayload.push({
           role: "user",
           parts: [{ text: message }]
         });
 
         const response = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-1.5-flash",
           contents: contentsPayload,
           config: {
             systemInstruction,
-            temperature: 0.7,
+            temperature: 0.5,
             maxOutputTokens: 800,
           }
         });
 
-        const reply = response.text ? response.text.trim() : "Maaf, terjadi kendala saat mengolah jawaban AI. Silakan coba lagi.";
+        const reply = response.text ? response.text.trim() : "Maaf, silakan coba lagi.";
         return res.json({ text: cleanAsterisks(reply) });
       } catch (geminiError: any) {
         console.error("Gemini chat API error:", geminiError);
-        return res.status(500).json({ error: "Koneksi ke Gemini terganggu.", details: geminiError.message });
+        return res.status(500).json({ error: "Koneksi terganggu.", details: geminiError.message });
       }
     } else {
       // Simulate highly precise Indonesian labor advisor responses in dev environment if key is missing
