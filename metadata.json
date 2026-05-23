@@ -1,0 +1,6 @@
+{
+  "name": "Surjob AI",
+  "description": "Deteksi toxic workplace dan wadah solidaritas pekerja Indonesia anonim dengan Surjob AI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
