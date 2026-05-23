@@ -2,13 +2,13 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyAxg1UifXQOWJpTEQLU_EGlBjmRSJEatu8",
+  authDomain: "survivejob.firebaseapp.com",
+  projectId: "survivejob",
+  storageBucket: "survivejob.firebasestorage.app",
+  messagingSenderId: "458942316653",
+  appId: "1:458942316653:web:8279b527b6f299d29e7f64",
+  measurementId: "G-VTLZS85XYK"
 };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
