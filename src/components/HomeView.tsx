@@ -65,24 +65,24 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
   return (
     <div className="w-full max-w-md mx-auto space-y-3 pb-24">
       {/* HEADER SECTION (Compact Android Style) */}
-      <div className="flex items-center justify-between pb-1 gap-2">
+      <div className="flex items-center justify-between pb-2 gap-2">
         <div className="flex flex-col min-w-0">
-          <h1 className="font-display font-bold text-base tracking-tight text-[#2C2A26] truncate">
+          <h1 className="font-display font-bold text-lg tracking-tight text-[#2C2A26] truncate">
             Selamat Sore, Pekerja
           </h1>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <div className="flex items-center gap-1 bg-[#FEF5E7] text-[#D35400] px-2 py-1 rounded-full shadow-sm border border-[#FDEBD0]">
-            <span className="text-[10px]">🔥</span>
-            <span className="font-bold text-[10px]">{stats ? stats.surviveCount : 892}</span>
+          <div className="flex items-center gap-1 bg-[#FEF5E7] text-[#D35400] px-3 py-1.5 rounded-full shadow-sm border border-[#FDEBD0]">
+            <span className="text-[11px]">🔥</span>
+            <span className="font-bold text-[11px]">{stats ? stats.surviveCount : 892}</span>
           </div>
           <div className="relative">
             <button 
               onClick={() => setShowNotifications(!showNotifications)}
-              className="bg-white p-1.5 rounded-full border border-[#E2DDD4] shadow-sm relative text-[#6B6458] active:scale-95 transition"
+              className="bg-white p-2 rounded-full border border-[#E2DDD4] shadow-sm relative text-[#6B6458] active:scale-95 transition"
             >
-              <Bell className="w-3.5 h-3.5" />
-              <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-red-500 rounded-full border border-white"></span>
+              <Bell className="w-4 h-4" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
             </button>
 
             <AnimatePresence>
@@ -92,31 +92,31 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute top-full right-0 mt-2 w-64 md:w-72 bg-white border border-[#E2DDD4] rounded-2xl shadow-xl z-50 overflow-hidden shrink-0"
+                  className="absolute top-full right-0 mt-2 w-72 md:w-80 bg-white border border-[#E2DDD4] rounded-2xl shadow-xl z-50 overflow-hidden shrink-0"
                 >
-                  <div className="p-3 border-b border-[#E2DDD4] bg-[#F7F3EC] flex justify-between items-center">
-                    <h4 className="font-bold text-[11px] text-[#2C2A26]">Notifikasi</h4>
-                    <span className="text-[9px] text-blue-600 font-bold bg-blue-50 px-1.5 py-0.5 rounded cursor-pointer">Tandai dibaca</span>
+                  <div className="p-4 border-b border-[#E2DDD4] bg-[#F7F3EC] flex justify-between items-center">
+                    <h4 className="font-bold text-xs text-[#2C2A26]">Notifikasi</h4>
+                    <span className="text-[10px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded cursor-pointer">Tandai dibaca</span>
                   </div>
-                  <div className="max-h-60 overflow-y-auto">
-                    <div className="p-3 border-b border-[#E2DDD4] hover:bg-slate-50 cursor-pointer transition text-left" onClick={() => { setShowNotifications(false); onNavigateToTab(2); }}>
-                      <div className="flex justify-between items-start mb-0.5">
-                        <span className="text-[9px] font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">Komunitas</span>
-                        <span className="text-[7px] text-[#A09880]">Baru saja</span>
+                  <div className="max-h-64 overflow-y-auto">
+                    <div className="p-4 border-b border-[#E2DDD4] hover:bg-slate-50 cursor-pointer transition text-left" onClick={() => { setShowNotifications(false); onNavigateToTab(2); }}>
+                      <div className="flex justify-between items-start mb-1">
+                        <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Komunitas</span>
+                        <span className="text-[9px] text-[#A09880]">Baru saja</span>
                       </div>
-                      <p className="text-[9px] text-[#6B6458] leading-tight mt-1.5">Postingan Anda "Cara nego gaji" mendapat 5 tanggapan baru.</p>
+                      <p className="text-[11px] text-[#6B6458] leading-normal mt-1.5">Postingan Anda "Cara nego gaji" mendapat 5 tanggapan baru.</p>
                     </div>
-                    <div className="p-3 border-b border-[#E2DDD4] hover:bg-slate-50 cursor-pointer transition text-left relative" onClick={() => { setShowNotifications(false); onNavigateToTab(4); }}>
-                      <div className="absolute top-3 right-3 w-1.5 h-1.5 bg-red-500 rounded-full"></div>
-                       <div className="flex justify-between items-start mb-0.5">
-                        <span className="text-[9px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded">Sistem</span>
-                        <span className="text-[7px] text-[#A09880]">1 jam lalu</span>
+                    <div className="p-4 border-b border-[#E2DDD4] hover:bg-slate-50 cursor-pointer transition text-left relative" onClick={() => { setShowNotifications(false); onNavigateToTab(4); }}>
+                      <div className="absolute top-4 right-4 w-2 h-2 bg-red-500 rounded-full"></div>
+                       <div className="flex justify-between items-start mb-1">
+                        <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">Sistem</span>
+                        <span className="text-[9px] text-[#A09880]">1 jam lalu</span>
                       </div>
-                      <p className="text-[9px] text-[#6B6458] leading-tight mt-1.5">Analisis dari kontrak kerja Anda sudah selesai diproses oleh AI.</p>
+                      <p className="text-[11px] text-[#6B6458] leading-normal mt-1.5">Analisis dari kontrak kerja Anda sudah selesai diproses oleh AI.</p>
                     </div>
                   </div>
-                  <div className="p-2 border-t border-[#E2DDD4] bg-white text-center">
-                    <button className="text-[9px] font-bold text-[#A09880] w-full text-center hover:text-[#2C2A26]">Lihat semua notifikasi</button>
+                  <div className="p-3 border-t border-[#E2DDD4] bg-white text-center">
+                    <button className="text-[10px] font-bold text-[#A09880] w-full text-center hover:text-[#2C2A26]">Lihat semua notifikasi</button>
                   </div>
                 </motion.div>
               )}
@@ -129,82 +129,82 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-[#EAF6FF] border border-[#BDE0FE] rounded-[14px] p-3 flex gap-2.5 shadow-sm relative overflow-hidden cursor-pointer"
+        className="bg-[#EAF6FF] border border-[#BDE0FE] rounded-[16px] p-4 flex gap-3 shadow-sm relative overflow-hidden cursor-pointer"
         onClick={() => onNavigateToTab(1)}
       >
-        <div className="bg-white text-blue-500 p-2 rounded-xl h-fit shrink-0 shadow-sm relative z-10">
-          <Shield className="w-4 h-4 fill-blue-50 text-blue-500" />
+        <div className="bg-white text-blue-500 p-2.5 rounded-xl h-fit shrink-0 shadow-sm relative z-10">
+          <Shield className="w-5 h-5 fill-blue-50 text-blue-500" />
         </div>
         <div className="flex-1 relative z-10 min-w-0">
-          <span className="text-[9px] font-bold text-blue-600 uppercase tracking-wider block mb-0.5 truncate">INFO TERBARU</span>
-          <p className="text-[11px] font-semibold text-blue-950 leading-tight mb-1 truncate">
+          <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-1 truncate">INFO TERBARU</span>
+          <p className="text-[13px] font-semibold text-blue-950 leading-tight mb-1 truncate">
             Cek kesehatan tempat kerjamu sekarang!
           </p>
-          <p className="text-[9px] text-blue-800/80 leading-snug break-words line-clamp-2">
+          <p className="text-[11px] text-blue-800/80 leading-normal break-words line-clamp-2">
             Analisis kontrak kerja, red flag, dan keluhanmu bersama AI anonim.
           </p>
         </div>
-        <ArrowRight className="w-3.5 h-3.5 text-blue-400 shrink-0 self-center relative z-10" />
+        <ArrowRight className="w-4 h-4 text-blue-400 shrink-0 self-center relative z-10" />
       </motion.div>
 
       {/* 4 ICON BUTTONS (Compact Grid) */}
-      <div className="grid grid-cols-4 gap-2 pt-0.5">
-        <button onClick={() => onNavigateToTab(1, "Cerita Bebas")} className="flex flex-col items-center gap-1.5 group cursor-pointer">
-          <div className="w-10 h-10 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm w-full max-w-[48px]">
-            <MessageSquare className="w-4 h-4 fill-blue-500 text-blue-500" />
+      <div className="grid grid-cols-4 gap-4 pt-2">
+        <button onClick={() => onNavigateToTab(1, "Cerita Bebas")} className="flex flex-col items-center gap-2 group cursor-pointer">
+          <div className="w-14 h-14 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm w-full max-w-[56px]">
+            <MessageSquare className="w-6 h-6 fill-blue-500 text-blue-500" />
           </div>
-          <span className="text-[8px] font-bold text-[#6B6458] uppercase tracking-wider truncate w-full text-center">KONSUL AI</span>
+          <span className="text-[10px] font-bold text-[#6B6458] uppercase tracking-wider truncate w-full text-center">KONSUL AI</span>
         </button>
         
-        <button onClick={() => onNavigateToTab(1, "Hak pekerja")} className="flex flex-col items-center gap-1.5 group cursor-pointer">
-          <div className="w-10 h-10 bg-green-50 text-green-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm w-full max-w-[48px]">
-            <Scale className="w-4 h-4 fill-green-500 text-green-500" />
+        <button onClick={() => onNavigateToTab(1, "Hak pekerja")} className="flex flex-col items-center gap-2 group cursor-pointer">
+          <div className="w-14 h-14 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm w-full max-w-[56px]">
+            <Scale className="w-6 h-6 fill-green-500 text-green-500" />
           </div>
-          <span className="text-[8px] font-bold text-[#6B6458] uppercase tracking-wider truncate w-full text-center">HUKUM</span>
+          <span className="text-[10px] font-bold text-[#6B6458] uppercase tracking-wider truncate w-full text-center">HUKUM</span>
         </button>
 
-        <button onClick={() => onNavigateToTab(1, "Resign Checker")} className="flex flex-col items-center gap-1.5 group cursor-pointer">
-          <div className="w-10 h-10 bg-orange-50 text-orange-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm w-full max-w-[48px]">
-            <LogOut className="w-4 h-4 fill-orange-500 text-orange-500" />
+        <button onClick={() => onNavigateToTab(1, "Resign Checker")} className="flex flex-col items-center gap-2 group cursor-pointer">
+          <div className="w-14 h-14 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm w-full max-w-[56px]">
+            <LogOut className="w-6 h-6 fill-orange-500 text-orange-500" />
           </div>
-          <span className="text-[8px] font-bold text-[#6B6458] uppercase tracking-wider truncate w-full text-center">RESIGN</span>
+          <span className="text-[10px] font-bold text-[#6B6458] uppercase tracking-wider truncate w-full text-center">RESIGN</span>
         </button>
 
-        <button onClick={() => onNavigateToTab(3)} className="flex flex-col items-center gap-1.5 group cursor-pointer">
-          <div className="w-10 h-10 bg-purple-50 text-purple-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm w-full max-w-[48px]">
-            <Trophy className="w-4 h-4 fill-purple-500 text-purple-500" />
+        <button onClick={() => onNavigateToTab(3)} className="flex flex-col items-center gap-2 group cursor-pointer">
+          <div className="w-14 h-14 bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm w-full max-w-[56px]">
+            <Trophy className="w-6 h-6 fill-purple-500 text-purple-500" />
           </div>
-          <span className="text-[8px] font-bold text-[#6B6458] uppercase tracking-wider truncate w-full text-center">RANK</span>
+          <span className="text-[10px] font-bold text-[#6B6458] uppercase tracking-wider truncate w-full text-center">RANK</span>
         </button>
       </div>
 
       {/* PROGRES LEVEL CARD & TIP BENTO */}
-      <div className="grid grid-cols-2 gap-2 mt-1">
-        <div className="bg-white border border-[#E2DDD4] rounded-[14px] p-2.5 shadow-sm flex flex-col justify-between overflow-hidden">
-          <div className="flex justify-between items-center mb-2 gap-1">
-            <div className="flex items-center gap-1 min-w-0">
-              <div className="bg-yellow-100 p-1 rounded-lg text-yellow-500 shrink-0">
-                <Shield className="w-3 h-3" />
+      <div className="grid grid-cols-2 gap-3 mt-3">
+        <div className="bg-white border border-[#E2DDD4] rounded-[16px] p-4 shadow-sm flex flex-col justify-between overflow-hidden">
+          <div className="flex justify-between items-center mb-3 gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="bg-yellow-100 p-1.5 rounded-lg text-yellow-500 shrink-0">
+                <Shield className="w-4 h-4" />
               </div>
-              <span className="text-[10px] font-bold text-[#2C2A26] truncate">Solidaritas</span>
+              <span className="text-xs font-bold text-[#2C2A26] truncate">Solidaritas</span>
             </div>
-            <span className="text-[9px] font-bold text-blue-600 shrink-0">
+            <span className="text-xs font-bold text-blue-600 shrink-0">
               {stats ? stats.curhatCount.toLocaleString("id-ID") : "1.247"}
             </span>
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-1 mb-1.5">
-            <div className="bg-yellow-400 h-1 rounded-full" style={{ width: '12%' }}></div>
+          <div className="w-full bg-slate-100 rounded-full h-2 mb-2">
+            <div className="bg-yellow-400 h-2 rounded-full" style={{ width: '12%' }}></div>
           </div>
-          <p className="text-[8px] text-[#6B6458] flex items-center gap-1 font-medium truncate">
-            <Trophy className="w-2.5 h-2.5 shrink-0" /> Target 10rb kasus!
+          <p className="text-[10px] text-[#6B6458] flex items-center gap-1 font-medium truncate">
+            <Trophy className="w-3 h-3 shrink-0" /> Target 10rb kasus!
           </p>
         </div>
 
-        <div className="bg-[#F0F7F4] border border-[#CDE1D6] rounded-[14px] p-2.5 shadow-sm flex gap-1.5 items-start relative overflow-hidden h-full">
-          <Info className="w-3.5 h-3.5 text-[#1E5C3A] shrink-0 mt-0.5" />
+        <div className="bg-[#F0F7F4] border border-[#CDE1D6] rounded-[16px] p-4 shadow-sm flex gap-3 items-start relative overflow-hidden h-full">
+          <Info className="w-4 h-4 text-[#1E5C3A] shrink-0 mt-0.5" />
           <div className="relative z-10 min-w-0">
-            <span className="text-[8px] font-bold text-[#1E5C3A] uppercase tracking-wider block mb-0.5 truncate">FAKTA HARI INI</span>
-            <p className="text-[8px] text-[#2C2A26] leading-tight font-medium break-words line-clamp-2">
+            <span className="text-[10px] font-bold text-[#1E5C3A] uppercase tracking-wider block mb-1 truncate">FAKTA HARI INI</span>
+            <p className="text-[11px] text-[#2C2A26] leading-snug font-medium break-words line-clamp-3">
               UU Kerja atur PHK tanpa alasan sah wajib tunjangan.
             </p>
           </div>
