@@ -59,13 +59,20 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
     return () => clearInterval(timer);
   }, []);
 
- 
-
-
   return (
-    <div className="w-full max-w-md mx-auto space-y-3 pb-24">
-      {/* HEADER SECTION (Compact Android Style) */}
-      <div className="flex items-center justify-between pb-2 gap-2">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="w-full max-w-md mx-auto space-y-3 pb-24"
+    >
+      {/* HEADER SECTION */}
+      <motion.div
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="flex items-center justify-between pb-2 gap-2"
+      >
         <div className="flex flex-col min-w-0">
           <h1 className="font-display font-bold text-lg tracking-tight text-[#2C2A26] truncate">
             Selamat Sore, Pekerja
@@ -77,7 +84,7 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
             <span className="font-bold text-[11px]">{stats ? stats.surviveCount : 892}</span>
           </div>
           <div className="relative">
-            <button 
+            <button
               onClick={() => setShowNotifications(!showNotifications)}
               className="bg-white p-2 rounded-full border border-[#E2DDD4] shadow-sm relative text-[#6B6458] active:scale-95 transition"
             >
@@ -87,7 +94,7 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
 
             <AnimatePresence>
               {showNotifications && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -108,8 +115,8 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
                     </div>
                     <div className="p-4 border-b border-[#E2DDD4] hover:bg-slate-50 cursor-pointer transition text-left relative" onClick={() => { setShowNotifications(false); onNavigateToTab(4); }}>
                       <div className="absolute top-4 right-4 w-2 h-2 bg-red-500 rounded-full"></div>
-                       <div className="flex justify-between items-start mb-1">
-                        <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">Sistem</span>
+                      <div className="flex justify-between items-start mb-1">
+                        <span className="text-[10px] font-bold text-green-600 bg-blue-50 px-2 py-0.5 rounded">Sistem</span>
                         <span className="text-[9px] text-[#A09880]">1 jam lalu</span>
                       </div>
                       <p className="text-[11px] text-[#6B6458] leading-normal mt-1.5">Analisis dari kontrak kerja Anda sudah selesai diproses oleh AI.</p>
@@ -123,39 +130,58 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
             </AnimatePresence>
           </div>
         </div>
-      </div>
-
-      {/* INFO BANNER */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-[#EAF6FF] border border-[#BDE0FE] rounded-[16px] p-4 flex gap-3 shadow-sm relative overflow-hidden cursor-pointer"
-        onClick={() => onNavigateToTab(1)}
-      >
-        <div className="bg-white text-blue-500 p-2.5 rounded-xl h-fit shrink-0 shadow-sm relative z-10">
-          <Shield className="w-5 h-5 fill-blue-50 text-blue-500" />
-        </div>
-        <div className="flex-1 relative z-10 min-w-0">
-          <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-1 truncate">INFO TERBARU</span>
-          <p className="text-[13px] font-semibold text-blue-950 leading-tight mb-1 truncate">
-            Cek kesehatan tempat kerjamu sekarang!
-          </p>
-          <p className="text-[11px] text-blue-800/80 leading-normal break-words line-clamp-2">
-            Analisis kontrak kerja, red flag, dan keluhanmu bersama AI anonim.
-          </p>
-        </div>
-        <ArrowRight className="w-4 h-4 text-blue-400 shrink-0 self-center relative z-10" />
       </motion.div>
 
-      {/* 4 ICON BUTTONS (Compact Grid) */}
-      <div className="grid grid-cols-4 gap-4 pt-2">
+      {/* INFO BANNER SLIDER */}
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.1, duration: 0.5 }}
+        className="relative h-28 overflow-hidden"
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentSlideIndex % 3}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+            className="absolute inset-0 bg-[#EAF6FF] border border-[#BDE0FE] rounded-[16px] p-4 flex gap-3 shadow-sm cursor-pointer"
+            onClick={() => onNavigateToTab(1)}
+          >
+            <div className="bg-white text-blue-500 p-2.5 rounded-xl h-fit shrink-0 shadow-sm relative z-10">
+              <Shield className="w-5 h-5 fill-blue-50 text-blue-500" />
+            </div>
+            <div className="flex-1 relative z-10 min-w-0">
+              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-1 truncate">
+                {currentSlideIndex % 3 === 0 ? "INFO TERBARU" : currentSlideIndex % 3 === 1 ? "TIPS HARI INI" : "KEAMANAN DATA"}
+              </span>
+              <p className="text-[13px] font-semibold text-blue-950 leading-tight mb-1 truncate">
+                {currentSlideIndex % 3 === 0 ? "Cek kesehatan tempat kerjamu sekarang!" : currentSlideIndex % 3 === 1 ? "Kenali hak lembur Anda!" : "Privasi 100% Terlindungi"}
+              </p>
+              <p className="text-[11px] text-blue-800/80 leading-normal break-words line-clamp-2">
+                {currentSlideIndex % 3 === 0 ? "Analisis kontrak kerja, red flag, dan keluhanmu bersama AI anonim." : currentSlideIndex % 3 === 1 ? "Pastikan setiap jam tambahan yang Anda lakukan tercatat secara resmi." : "Curhatan dan konsultasi Anda dijamin anonimitasnya oleh sistem kami."}
+              </p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-blue-400 shrink-0 self-center relative z-10" />
+          </motion.div>
+        </AnimatePresence>
+      </motion.div>
+
+      {/* 4 ICON BUTTONS */}
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="grid grid-cols-4 gap-4 pt-2"
+      >
         <button onClick={() => onNavigateToTab(1, "Cerita Bebas")} className="flex flex-col items-center gap-2 group cursor-pointer">
           <div className="w-14 h-14 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm w-full max-w-[56px]">
             <MessageSquare className="w-6 h-6 fill-blue-500 text-blue-500" />
           </div>
           <span className="text-[10px] font-bold text-[#6B6458] uppercase tracking-wider truncate w-full text-center">KONSUL AI</span>
         </button>
-        
+
         <button onClick={() => onNavigateToTab(1, "Hak pekerja")} className="flex flex-col items-center gap-2 group cursor-pointer">
           <div className="w-14 h-14 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm w-full max-w-[56px]">
             <Scale className="w-6 h-6 fill-green-500 text-green-500" />
@@ -176,7 +202,7 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
           </div>
           <span className="text-[10px] font-bold text-[#6B6458] uppercase tracking-wider truncate w-full text-center">RANK</span>
         </button>
-      </div>
+      </motion.div>
 
       {/* PROGRES LEVEL CARD & TIP BENTO */}
       <div className="grid grid-cols-2 gap-3 mt-3">
@@ -212,243 +238,251 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
       </div>
 
       {/* QUICK NEW FEATURES BENTO */}
-      <div className="grid grid-cols-2 gap-2 mt-1">
-        <div className="bg-gradient-to-br from-[#1E5C3A] to-[#144229] rounded-[14px] p-2.5 shadow-sm relative overflow-hidden text-white flex flex-col justify-between h-16 cursor-pointer" onClick={() => onNavigateToTab(1, "Simulasi Negosiasi")}>
-           <div className="absolute top-0 right-0 w-12 h-12 bg-white/10 rounded-full blur-xl translate-x-4 -translate-y-4"></div>
-           <div className="flex justify-between items-start gap-1">
-             <MessageSquare className="w-3.5 h-3.5 text-green-200 shrink-0" />
-             <span className="text-[6px] bg-white/20 px-1 py-0.5 rounded uppercase font-bold tracking-wider shrink-0">BARU</span>
-           </div>
-           <div className="min-w-0">
-             <h3 className="text-[9px] sm:text-[10px] font-bold truncate">Simulasi Bos</h3>
-             <p className="text-[7px] text-green-100/80 leading-tight truncate">Latih bicara ke atasan</p>
-           </div>
+      <div className="grid grid-cols-2 gap-3 mt-3">
+        {/* Simulasi Bos */}
+        <div className="relative bg-gradient-to-br from-[#1E5C3A] to-[#144229] rounded-[16px] p-4 shadow-sm overflow-hidden text-white flex flex-col justify-between h-24 cursor-pointer" onClick={() => onNavigateToTab(1, "Simulasi Negosiasi")}>
+          <motion.div
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
+            className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg]"
+          />
+          <div className="flex justify-between items-start gap-2 relative z-10">
+            <MessageSquare className="w-5 h-5 text-green-200 shrink-0" />
+            <span className="text-[9px] bg-white/20 px-2 py-0.5 rounded uppercase font-bold tracking-wider shrink-0">BARU</span>
+          </div>
+          <div className="min-w-0 relative z-10">
+            <h3 className="text-xs font-bold truncate">Simulasi Bos</h3>
+            <p className="text-[10px] text-green-100/90 leading-tight truncate">Latih bicara ke atasan</p>
+          </div>
         </div>
 
-        <div className="bg-gradient-to-br from-[#8B5CF6] to-[#6D28D9] rounded-[14px] p-2.5 shadow-sm relative overflow-hidden text-white flex flex-col justify-between h-16 cursor-pointer" onClick={() => onNavigateToTab(1, "Hitung Hak")}>
-           <div className="absolute bottom-0 right-0 w-12 h-12 bg-white/10 rounded-full blur-xl translate-x-4 translate-y-4"></div>
-           <div className="flex justify-between items-start gap-1">
-             <Gamepad2 className="w-3.5 h-3.5 text-purple-200 shrink-0" />
-             <span className="text-[6px] bg-white/20 px-1 py-0.5 rounded uppercase font-bold tracking-wider shrink-0">BARU</span>
-           </div>
-           <div className="min-w-0">
-             <h3 className="text-[9px] sm:text-[10px] font-bold truncate">Kalkulator Hak</h3>
-             <p className="text-[7px] text-purple-100/80 leading-tight truncate">Hitung estimasi Anda</p>
-           </div>
+        {/* Kalkulator Hak */}
+        <div className="relative bg-gradient-to-br from-[#8B5CF6] to-[#6D28D9] rounded-[16px] p-4 shadow-sm overflow-hidden text-white flex flex-col justify-between h-24 cursor-pointer" onClick={() => onNavigateToTab(1, "Hitung Hak")}>
+          <motion.div
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{ repeat: Infinity, duration: 3, delay: 1.5, ease: "linear" }}
+            className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg]"
+          />
+          <div className="flex justify-between items-start gap-2 relative z-10">
+            <Gamepad2 className="w-5 h-5 text-purple-200 shrink-0" />
+            <span className="text-[9px] bg-white/20 px-2 py-0.5 rounded uppercase font-bold tracking-wider shrink-0">BARU</span>
+          </div>
+          <div className="min-w-0 relative z-10">
+            <h3 className="text-xs font-bold truncate">Kalkulator Hak</h3>
+            <p className="text-[10px] text-purple-100/90 leading-tight truncate">Hitung estimasi Anda</p>
+          </div>
         </div>
 
-        {/* DARURAT / TEMPLATE: Full width new cool feature */}
-        <div className="col-span-2 bg-gradient-to-r from-[#D35400] to-[#E67E22] rounded-[14px] p-2.5 shadow-sm relative overflow-hidden text-white flex items-center justify-between cursor-pointer group" onClick={() => onNavigateToTab(1, "Template Somasi")}>
-           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-           <div className="flex items-center gap-2 relative z-10 min-w-0">
-             <div className="bg-white/20 p-1.5 rounded-lg shrink-0">
-               <Download className="w-3.5 h-3.5 text-orange-50" />
-             </div>
-             <div className="min-w-0">
-               <h3 className="text-[10px] font-bold truncate">Generator Surat Kuasa & Somasi</h3>
-               <p className="text-[7px] text-orange-100/90 truncate mt-0.5">Dapatkan draf resmi tegur perusahaan.</p>
-             </div>
-           </div>
-           <ArrowRight className="w-3.5 h-3.5 text-orange-100 shrink-0 group-hover:translate-x-1 transition-transform" />
+        {/* Generator Surat */}
+        <div className="col-span-2 bg-gradient-to-r from-[#D35400] to-[#E67E22] rounded-[16px] p-4 shadow-sm relative overflow-hidden text-white flex items-center justify-between cursor-pointer group" onClick={() => onNavigateToTab(1, "Template Somasi")}>
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+          <div className="flex items-center gap-3 relative z-10 min-w-0">
+            <div className="bg-white/20 p-2.5 rounded-xl shrink-0">
+              <Download className="w-5 h-5 text-orange-50" />
+            </div>
+            <div className="min-w-0">
+              <h3 className="text-sm font-bold truncate">Generator Surat Kuasa & Somasi</h3>
+              <p className="text-xs text-orange-100/90 truncate mt-0.5">Dapatkan draf resmi teguran perusahaan.</p>
+            </div>
+          </div>
+          <ArrowRight className="w-5 h-5 text-orange-100 shrink-0 group-hover:translate-x-1 transition-transform" />
         </div>
       </div>
 
-      {/* SEARCH BAR EMULATION */}
-      <div className="relative mt-1">
-        <Search className="w-3.5 h-3.5 text-[#A09880] absolute left-3 top-1/2 -translate-y-1/2" />
-        <input 
-          type="text" 
-          placeholder="Cari pedoman UU, dll..." 
-          className="w-full bg-white border border-[#E2DDD4] rounded-xl py-2.5 pl-8 pr-3 text-[10px] font-medium shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+      {/* SEARCH BAR */}
+      <div className="relative mt-3">
+        <Search className="w-4 h-4 text-[#A09880] absolute left-4 top-1/2 -translate-y-1/2" />
+        <input
+          type="text"
+          placeholder="Cari pedoman UU, dll..."
+          className="w-full bg-white border border-[#E2DDD4] rounded-xl py-3.5 pl-11 pr-4 text-xs font-medium shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
           onFocus={() => onNavigateToTab(1)}
         />
       </div>
 
-      {/* LANJUTKAN ANALISIS CARD (Similar to "Lanjutkan Belajar") with Slider */}
-      <div className="bg-gradient-to-br from-[#0CA3E7] to-[#0A8AC3] text-white rounded-[14px] p-3 shadow-sm relative overflow-hidden mt-1 h-28">
-         <div className="absolute top-0 right-0 w-28 h-28 bg-white/10 rounded-full blur-xl translate-x-10 -translate-y-10"></div>
-         <div className="relative z-10 flex flex-col h-full justify-between">
-            <div className="flex justify-between items-start gap-2">
-              <span className="inline-block bg-white/20 px-1.5 py-0.5 rounded text-[8px] font-bold tracking-wider uppercase backdrop-blur-sm shrink-0">
-                LANJUTKAN ANALISIS
-              </span>
-              <div className="flex gap-1 shrink-0 mt-1">
-                {slides.map((_, i) => (
-                  <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${i === currentSlideIndex ? 'bg-white w-2.5' : 'bg-white/50'}`}></div>
-                ))}
-              </div>
-            </div>
-            
-            <div className="flex-1 relative overflow-hidden mt-2 min-w-0">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentSlideIndex}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute inset-0 flex flex-col justify-end"
-                >
-                  <div className="min-w-0">
-                    <span className="text-[8px] font-medium text-blue-100 tracking-wide uppercase truncate block">{slides[currentSlideIndex].tag}</span>
-                    <h3 className="font-display font-bold text-xs mt-0.5 tracking-tight leading-tight truncate">{slides[currentSlideIndex].title}</h3>
-                  </div>
-
-                  <div className="flex items-center justify-between text-[9px] pt-1.5 gap-2">
-                    <span className="text-blue-100 flex items-center gap-1 font-medium truncate">
-                       <Flag className="w-2.5 h-2.5 shrink-0" /> <span className="truncate">{slides[currentSlideIndex].flags} Red Flags</span>
-                    </span>
-                    <button onClick={() => onNavigateToTab(4)} className="bg-white/10 hover:bg-white/20 transition-colors px-1.5 py-1 rounded flex items-center gap-1 backdrop-blur-sm cursor-pointer border border-white/20 shrink-0">
-                      <FileText className="w-2.5 h-2.5 shrink-0" />
-                      <span className="text-[8px]">Lihat</span>
-                    </button>
-                  </div>
-                  
-                  <div className="w-full bg-black/20 rounded-full h-1 mt-1.5">
-                    <motion.div 
-                      className="bg-white h-1 rounded-full" 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${slides[currentSlideIndex].progress}%` }}
-                      transition={{ duration: 0.5 }}
-                    ></motion.div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-         </div>
-      </div>
-
-      {/* KATEGORI HUKUM PILLS (Like "Mata Pelajaran") */}
-      <div className="space-y-1.5 pb-2 mt-2 w-full overflow-hidden">
-        <h3 className="font-display font-bold text-[11px] text-[#2C2A26]">Pilih Kategori Utama</h3>
-        <div className="flex overflow-x-auto gap-2 pb-1 scrollbar-hide w-full">
-          <button onClick={() => onNavigateToTab(1, "Hak pekerja")} className="flex items-center gap-1.5 bg-white border border-[#E2DDD4] rounded-xl pl-1 pr-2 py-1 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
-            <div className="bg-purple-100 p-1 rounded-lg text-purple-600 shrink-0">
-              <Scale className="w-3 h-3" />
-            </div>
-            <span className="font-bold text-[8px] tracking-wide text-[#2C2A26] truncate">Hak Ketenagakerjaan</span>
-          </button>
-          
-          <button onClick={() => onNavigateToTab(1, "Deteksi toxic")} className="flex items-center gap-1.5 bg-white border border-[#E2DDD4] rounded-xl pl-1 pr-2 py-1 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
-            <div className="bg-red-100 p-1 rounded-lg text-red-600 shrink-0">
-              <Flag className="w-3 h-3" />
-            </div>
-            <span className="font-bold text-[8px] tracking-wide text-[#2C2A26] truncate">Deteksi Red Flags</span>
-          </button>
-
-          <button onClick={() => onNavigateToTab(1, "Script bicara")} className="flex items-center gap-1.5 bg-white border border-[#E2DDD4] rounded-xl pl-1 pr-2 py-1 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
-            <div className="bg-orange-100 p-1 rounded-lg text-orange-600 shrink-0">
-              <MessageSquare className="w-3 h-3" />
-            </div>
-            <span className="font-bold text-[8px] tracking-wide text-[#2C2A26] truncate">Script HRD/Bos</span>
-          </button>
-
-          <button onClick={() => onNavigateToTab(1, "Analisis kontrak")} className="flex items-center gap-1.5 bg-white border border-[#E2DDD4] rounded-xl pl-1 pr-2 py-1 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
-            <div className="bg-blue-100 p-1 rounded-lg text-blue-600 shrink-0">
-              <FileSearch className="w-3 h-3" />
-            </div>
-            <span className="font-bold text-[8px] tracking-wide text-[#2C2A26] truncate">Analisis Kontrak</span>
-          </button>
-
-          <button onClick={() => onNavigateToTab(1, "Lapor Disnaker")} className="flex items-center gap-1.5 bg-white border border-[#E2DDD4] rounded-xl pl-1 pr-2 py-1 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
-            <div className="bg-teal-100 p-1 rounded-lg text-teal-600 shrink-0">
-              <Building2 className="w-3 h-3" />
-            </div>
-            <span className="font-bold text-[8px] tracking-wide text-[#2C2A26] truncate">Lapor Disnaker</span>
-          </button>
-
-          <button onClick={() => onNavigateToTab(1, "Panduan BPJS")} className="flex items-center gap-1.5 bg-white border border-[#E2DDD4] rounded-xl pl-1 pr-2 py-1 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
-            <div className="bg-pink-100 p-1 rounded-lg text-pink-600 shrink-0">
-              <HeartPulse className="w-3 h-3" />
-            </div>
-            <span className="font-bold text-[8px] tracking-wide text-[#2C2A26] truncate">Panduan BPJS</span>
-          </button>
-        </div>
-      </div>
-
-      {/* TREN KOMUNITAS / DISKUSI HANGAT */}
-      <div className="space-y-1.5 pb-2 mt-2 w-full overflow-hidden">
-        <div className="flex items-center justify-between px-1">
-          <h3 className="font-display font-bold text-[11px] text-[#2C2A26] flex items-center gap-1.5">
-             <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
-             Diskusi Hangat (Live)
-          </h3>
-          <button onClick={() => onNavigateToTab(2)} className="text-[9px] text-blue-600 font-bold hover:underline">Lihat Semua</button>
-        </div>
-        
-        <div className="flex flex-col gap-2">
-          {/* Mock Post 1 */}
-          <div className="bg-white border border-[#E2DDD4] rounded-[12px] p-2.5 shadow-sm cursor-pointer hover:bg-slate-50 transition" onClick={() => onNavigateToTab(2)}>
-            <div className="flex justify-between items-start mb-1">
-              <span className="text-[8px] font-bold text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded">Tanya Hukum</span>
-              <span className="text-[7px] text-[#A09880]">2 mnt lalu</span>
-            </div>
-            <p className="text-[9px] font-medium text-[#2C2A26] line-clamp-2 leading-tight">
-              Sore min, saya mau nanya. Bos saya tiba-tiba motong gaji 20% karena alasan target gak tercapai, padahal di kontrak gak ada aturan pemotongan...
-            </p>
-            <div className="flex items-center gap-2 mt-1.5 text-[#A09880]">
-              <span className="flex items-center gap-0.5 text-[8px]"><MessageSquare className="w-2.5 h-2.5" /> 12 Tanggapan</span>
-              <span className="flex items-center gap-0.5 text-[8px]"><ArrowRight className="w-2.5 h-2.5 text-blue-500" /></span>
+      {/* LANJUTKAN ANALISIS CARD */}
+      <div className="bg-gradient-to-br from-[#0CA3E7] to-[#0A8AC3] text-white rounded-[16px] p-4 shadow-sm relative overflow-hidden mt-3 h-32">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-xl translate-x-10 -translate-y-10"></div>
+        <div className="relative z-10 flex flex-col h-full justify-between">
+          <div className="flex justify-between items-start gap-2">
+            <span className="inline-block bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase backdrop-blur-sm shrink-0">
+              LANJUTKAN ANALISIS
+            </span>
+            <div className="flex gap-1 shrink-0 mt-1">
+              {slides.map((_, i) => (
+                <div key={i} className={`w-2 h-2 rounded-full transition-colors ${i === currentSlideIndex ? 'bg-white w-4' : 'bg-white/50'}`}></div>
+              ))}
             </div>
           </div>
 
-          {/* Mock Post 2 */}
-          <div className="bg-white border border-[#E2DDD4] rounded-[12px] p-2.5 shadow-sm cursor-pointer hover:bg-slate-50 transition" onClick={() => onNavigateToTab(2)}>
-            <div className="flex justify-between items-start mb-1">
-               <span className="text-[8px] font-bold text-red-600 bg-red-50 px-1.5 py-0.5 rounded">Red Flag Alert</span>
-              <span className="text-[7px] text-[#A09880]">15 mnt lalu</span>
+          <div className="flex-1 relative overflow-hidden mt-3 min-w-0">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlideIndex}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="absolute inset-0 flex flex-col justify-end"
+              >
+                <div className="min-w-0">
+                  <span className="text-[10px] font-medium text-blue-100 tracking-wide uppercase truncate block">{slides[currentSlideIndex].tag}</span>
+                  <h3 className="font-display font-bold text-sm mt-1 tracking-tight leading-tight truncate">{slides[currentSlideIndex].title}</h3>
+                </div>
+
+                <div className="flex items-center justify-between text-[11px] pt-2 gap-3">
+                  <span className="text-blue-100 flex items-center gap-1.5 font-medium truncate">
+                    <Flag className="w-3.5 h-3.5 shrink-0" /> <span>{slides[currentSlideIndex].flags} Red Flags</span>
+                  </span>
+                  <button onClick={() => onNavigateToTab(4)} className="bg-white/10 hover:bg-white/20 transition-colors px-3 py-1 rounded-lg flex items-center gap-1.5 backdrop-blur-sm cursor-pointer border border-white/20 shrink-0 text-xs">
+                    <FileText className="w-3.5 h-3.5 shrink-0" />
+                    <span>Lihat</span>
+                  </button>
+                </div>
+
+                <div className="w-full bg-black/20 rounded-full h-1.5 mt-2">
+                  <motion.div
+                    className="bg-white h-1.5 rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${slides[currentSlideIndex].progress}%` }}
+                    transition={{ duration: 0.5 }}
+                  ></motion.div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+
+      {/* KATEGORI HUKUM PILLS */}
+      <div className="space-y-3 pb-4 mt-4 w-full overflow-hidden">
+        <h3 className="font-display font-bold text-sm text-[#2C2A26]">Pilih Kategori Utama</h3>
+        <div className="flex overflow-x-auto gap-3 pb-2 scrollbar-hide w-full">
+          <button onClick={() => onNavigateToTab(1, "Hak pekerja")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
+            <div className="bg-purple-100 p-1.5 rounded-xl text-purple-600 shrink-0">
+              <Scale className="w-4 h-4" />
             </div>
-            <p className="text-[9px] font-medium text-[#2C2A26] line-clamp-2 leading-tight">
+            <span className="font-bold text-[11px] tracking-wide text-[#2C2A26] truncate">Hak Ketenagakerjaan</span>
+          </button>
+
+          <button onClick={() => onNavigateToTab(1, "Deteksi toxic")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
+            <div className="bg-red-100 p-1.5 rounded-xl text-red-600 shrink-0">
+              <Flag className="w-4 h-4" />
+            </div>
+            <span className="font-bold text-[11px] tracking-wide text-[#2C2A26] truncate">Deteksi Red Flags</span>
+          </button>
+
+          <button onClick={() => onNavigateToTab(1, "Script bicara")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
+            <div className="bg-orange-100 p-1.5 rounded-xl text-orange-600 shrink-0">
+              <MessageSquare className="w-4 h-4" />
+            </div>
+            <span className="font-bold text-[11px] tracking-wide text-[#2C2A26] truncate">Script HRD/Bos</span>
+          </button>
+
+          <button onClick={() => onNavigateToTab(1, "Analisis kontrak")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
+            <div className="bg-blue-100 p-1.5 rounded-xl text-blue-600 shrink-0">
+              <FileSearch className="w-4 h-4" />
+            </div>
+            <span className="font-bold text-[11px] tracking-wide text-[#2C2A26] truncate">Analisis Kontrak</span>
+          </button>
+
+          <button onClick={() => onNavigateToTab(1, "Lapor Disnaker")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
+            <div className="bg-teal-100 p-1.5 rounded-xl text-teal-600 shrink-0">
+              <Building2 className="w-4 h-4" />
+            </div>
+            <span className="font-bold text-[11px] tracking-wide text-[#2C2A26] truncate">Lapor Disnaker</span>
+          </button>
+
+          <button onClick={() => onNavigateToTab(1, "Panduan BPJS")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
+            <div className="bg-pink-100 p-1.5 rounded-xl text-pink-600 shrink-0">
+              <HeartPulse className="w-4 h-4" />
+            </div>
+            <span className="font-bold text-[11px] tracking-wide text-[#2C2A26] truncate">Panduan BPJS</span>
+          </button>
+        </div>
+      </div>
+
+      {/* DISKUSI HANGAT */}
+      <div className="space-y-2 pb-2 mt-2 w-full overflow-hidden">
+        <div className="flex items-center justify-between px-1">
+          <h3 className="font-display font-bold text-sm text-[#2C2A26] flex items-center gap-1.5">
+            <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+            Diskusi Hangat (Live)
+          </h3>
+          <button onClick={() => onNavigateToTab(2)} className="text-xs text-blue-600 font-bold hover:underline">Lihat Semua</button>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <div className="bg-white border border-[#E2DDD4] rounded-[12px] p-3 shadow-sm cursor-pointer hover:bg-slate-50 transition" onClick={() => onNavigateToTab(2)}>
+            <div className="flex justify-between items-start mb-1.5">
+              <span className="text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tanya Hukum</span>
+              <span className="text-[10px] text-[#A09880]">2 mnt lalu</span>
+            </div>
+            <p className="text-xs font-medium text-[#2C2A26] line-clamp-2 leading-snug">
+              Sore min, saya mau nanya. Bos saya tiba-tiba motong gaji 20% karena alasan target gak tercapai, padahal di kontrak gak ada aturan pemotongan...
+            </p>
+            <div className="flex items-center gap-2 mt-2 text-[#A09880]">
+              <span className="flex items-center gap-1 text-[10px]"><MessageSquare className="w-3 h-3" /> 12 Tanggapan</span>
+              <ArrowRight className="w-3 h-3 text-blue-500" />
+            </div>
+          </div>
+
+          <div className="bg-white border border-[#E2DDD4] rounded-[12px] p-3 shadow-sm cursor-pointer hover:bg-slate-50 transition" onClick={() => onNavigateToTab(2)}>
+            <div className="flex justify-between items-start mb-1.5">
+              <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Red Flag Alert</span>
+              <span className="text-[10px] text-[#A09880]">15 mnt lalu</span>
+            </div>
+            <p className="text-xs font-medium text-[#2C2A26] line-clamp-2 leading-snug">
               Hati-hati buat temen-temen yg apply di PT *** daerah Jaksel. Tadi siang interview malah disuruh tahan ijazah asli, terus dipaksa ttd kontrak hari itu juga.
             </p>
-            <div className="flex items-center gap-2 mt-1.5 text-[#A09880]">
-              <span className="flex items-center gap-0.5 text-[8px]"><MessageSquare className="w-2.5 h-2.5" /> 45 Tanggapan</span>
-              <span className="flex items-center gap-0.5 text-[8px]"><ArrowRight className="w-2.5 h-2.5 text-blue-500" /></span>
+            <div className="flex items-center gap-2 mt-2 text-[#A09880]">
+              <span className="flex items-center gap-1 text-[10px]"><MessageSquare className="w-3 h-3" /> 45 Tanggapan</span>
+              <ArrowRight className="w-3 h-3 text-blue-500" />
             </div>
           </div>
         </div>
       </div>
 
       {/* POLLING BERSAMA */}
-      <div className="space-y-1.5 pb-2 mt-2 w-full overflow-hidden">
+      <div className="space-y-2 pb-2 mt-2 w-full overflow-hidden">
         <div className="flex items-center justify-between px-1">
-          <h3 className="font-display font-bold text-[11px] text-[#2C2A26] flex items-center gap-1.5">
-             <PieChart className="w-3 h-3 text-blue-500" />
-             Suara Pekerja (Polling)
+          <h3 className="font-display font-bold text-sm text-[#2C2A26] flex items-center gap-1.5">
+            <PieChart className="w-3.5 h-3.5 text-blue-500" />
+            Suara Pekerja (Polling)
           </h3>
-          <span className="text-[7px] text-[#A09880] font-bold border border-[#E2DDD4] px-1.5 py-0.5 rounded-md bg-white">1.204 Suara</span>
+          <span className="text-[10px] text-[#A09880] font-bold border border-[#E2DDD4] px-1.5 py-0.5 rounded-md bg-white">1.204 Suara</span>
         </div>
-        
-        <div className="bg-gradient-to-br from-white to-[#F7F3EC] border border-[#E2DDD4] rounded-[12px] p-2.5 shadow-sm">
-          <p className="text-[10px] font-bold text-[#2C2A26] mb-2 leading-tight">Apakah kantormu bayar uang lembur sesuai aturan Undang-Undang?</p>
-          
-          <div className="space-y-1.5">
-            <button className="w-full relative bg-white border border-[#E2DDD4] rounded-lg p-1.5 text-left overflow-hidden group hover:border-blue-400 transition-colors cursor-pointer">
-               <div className="absolute top-0 left-0 h-full bg-blue-100/60 w-[12%] group-hover:bg-blue-200/50 transition-colors"></div>
-               <div className="relative z-10 flex justify-between items-center px-1">
-                 <span className="text-[9px] font-semibold text-[#2C2A26]">Sesuai aturan (Pasti dibayar)</span>
-                 <span className="text-[8px] font-bold text-blue-600">12%</span>
-               </div>
+
+        <div className="bg-gradient-to-br from-white to-[#F7F3EC] border border-[#E2DDD4] rounded-[12px] p-3 shadow-sm">
+          <p className="text-xs font-bold text-[#2C2A26] mb-2.5 leading-snug">Apakah kantormu bayar uang lembur sesuai aturan Undang-Undang?</p>
+
+          <div className="space-y-2">
+            <button className="w-full relative bg-white border border-[#E2DDD4] rounded-lg p-2 text-left overflow-hidden group hover:border-blue-400 transition-colors cursor-pointer">
+              <div className="absolute top-0 left-0 h-full bg-blue-100/60 w-[12%] group-hover:bg-blue-200/50 transition-colors"></div>
+              <div className="relative z-10 flex justify-between items-center px-1">
+                <span className="text-[11px] font-semibold text-[#2C2A26]">Sesuai aturan (Pasti dibayar)</span>
+                <span className="text-[10px] font-bold text-blue-600">12%</span>
+              </div>
             </button>
 
-            <button className="w-full relative bg-white border border-[#E2DDD4] rounded-lg p-1.5 text-left overflow-hidden group hover:border-blue-400 transition-colors cursor-pointer">
-               <div className="absolute top-0 left-0 h-full bg-blue-100/60 w-[24%] group-hover:bg-blue-200/50 transition-colors"></div>
-               <div className="relative z-10 flex justify-between items-center px-1">
-                 <span className="text-[9px] font-semibold text-[#2C2A26]">Hitungan flat mingguan</span>
-                 <span className="text-[8px] font-bold text-blue-600">24%</span>
-               </div>
+            <button className="w-full relative bg-white border border-[#E2DDD4] rounded-lg p-2 text-left overflow-hidden group hover:border-blue-400 transition-colors cursor-pointer">
+              <div className="absolute top-0 left-0 h-full bg-blue-100/60 w-[24%] group-hover:bg-blue-200/50 transition-colors"></div>
+              <div className="relative z-10 flex justify-between items-center px-1">
+                <span className="text-[11px] font-semibold text-[#2C2A26]">Hitungan flat mingguan</span>
+                <span className="text-[10px] font-bold text-blue-600">24%</span>
+              </div>
             </button>
 
-            <button className="w-full relative bg-white border border-[#E2DDD4] rounded-lg p-1.5 text-left overflow-hidden group hover:border-blue-400 transition-colors cursor-pointer">
-               <div className="absolute top-0 left-0 h-full bg-blue-100/60 w-[64%] group-hover:bg-blue-200/50 transition-colors"></div>
-               <div className="relative z-10 flex justify-between items-center px-1">
-                 <span className="text-[9px] font-semibold text-[#2C2A26]">Sama sekali tidak dibayar (Loyalitas)</span>
-                 <span className="text-[8px] font-bold text-blue-600">64%</span>
-               </div>
+            <button className="w-full relative bg-white border border-[#E2DDD4] rounded-lg p-2 text-left overflow-hidden group hover:border-blue-400 transition-colors cursor-pointer">
+              <div className="absolute top-0 left-0 h-full bg-blue-100/60 w-[64%] group-hover:bg-blue-200/50 transition-colors"></div>
+              <div className="relative z-10 flex justify-between items-center px-1">
+                <span className="text-[11px] font-semibold text-[#2C2A26]">Sama sekali tidak dibayar (Loyalitas)</span>
+                <span className="text-[10px] font-bold text-blue-600">64%</span>
+              </div>
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

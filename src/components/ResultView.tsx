@@ -57,9 +57,10 @@ export default function ResultView({ report, onNavigateToChat, onNavigateToCommu
     }
   };
 
-  if (!report) {
-    return (
-      <div className="max-w-md mx-auto bg-white border border-[#E2DDD4] p-8 rounded-lg text-center space-y-6 shadow-sm my-4">
+if (!report) {
+  return (
+    <div className="flex flex-col flex-1 min-h-[calc(100vh-140px)] items-center justify-center px-4">
+      <div className="max-w-md w-full bg-white border border-[#E2DDD4] p-8 rounded-lg text-center space-y-6 shadow-sm">
         <div className="mx-auto w-16 h-16 bg-[#EDE8DF] rounded-full flex items-center justify-center text-2xl">
           📊
         </div>
@@ -77,8 +78,9 @@ export default function ResultView({ report, onNavigateToChat, onNavigateToCommu
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   if (showScoreLoader) {
     return (

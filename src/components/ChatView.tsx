@@ -340,7 +340,7 @@ const getOrCreateClientId = (): string => {
       </div>
 
       {/* INPUT CONTROL BAR */}
-      <div className="bg-[#FFFFFF] border-t border-[#E2DDD4] px-4 py-3">
+      <div className="bg-[#FFFFFF] border-t border-[#E2DDD4] px-4 pt-3 pb-2 w-full">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -374,7 +374,7 @@ const getOrCreateClientId = (): string => {
             <Send className="w-4 h-4" />
           </button>
         </form>
-        <div className="flex justify-center mt-2.5 mb-1 pb-[env(safe-area-inset-bottom)] px-4 w-full">
+        <div className="flex justify-center pt-2 pb-1 w-full">
           <span className="text-[10px] text-[#A09880] text-center w-full">🔒 Privasi Terjamin — Identitas dan interaksi Anda 100% aman disamarkan</span>
         </div>
       </div>
