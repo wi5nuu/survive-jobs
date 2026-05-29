@@ -8,6 +8,8 @@ import LeaderboardView from "./components/LeaderboardView";
 import ResultView from "./components/ResultView";
 import OnboardingView from "./components/OnboardingView";
 import FeaturePage from "./components/FeaturePage";
+import SimulasiBosView from "./components/SimulasiBosView";
+import KalkulatorHakView from "./components/KalkulatorHakView";
 import { AnalyzeResponse } from "./types";
 
 const TAB_PATHS = ["/", "/analisis", "/komunitas", "/peringkat", "/hasil"];
@@ -71,9 +73,16 @@ function AppContent() {
                 />
               }
             />
-            <Route path="/simulasi-bos" element={<FeaturePage title="Simulasi Bos" description="Latih bicara ke atasan" />} />
-            <Route path="/kalkulator-hak" element={<FeaturePage title="Kalkulator Hak" description="Hitung estimasi Anda" />} />
+            <Route path="/simulasi-bos" element={<SimulasiBosView />} />
+            <Route path="/kalkulator-hak" element={<KalkulatorHakView />} />
             <Route path="/template-somasi" element={<FeaturePage title="Generator Surat Kuasa & Somasi" description="Draf resmi teguran perusahaan" />} />
+            <Route path="/hukum" element={<FeaturePage title="Hukum Ketenagakerjaan" description="Ketahui hak-hak Anda berdasarkan undang-undang" />} />
+            <Route path="/resign" element={<FeaturePage title="Panduan Resign Aman" description="Cek apakah keputusan resign Anda aman dari pinalti" />} />
+            <Route path="/deteksi-toxic" element={<FeaturePage title="Deteksi Red Flags" description="Kenali ciri-ciri perusahaan beracun" />} />
+            <Route path="/script-hrd" element={<FeaturePage title="Script HRD/Bos" description="Dapatkan draf pesan untuk HRD atau atasan" />} />
+            <Route path="/analisis-kontrak" element={<FeaturePage title="Analisis Kontrak" description="Analisis isi kontrak kerja Anda" />} />
+            <Route path="/lapor-disnaker" element={<FeaturePage title="Lapor Disnaker" description="Panduan melapor ke Disnaker" />} />
+            <Route path="/panduan-bpjs" element={<FeaturePage title="Panduan BPJS" description="Informasi seputar BPJS Ketenagakerjaan" />} />
           </Routes>
         </div>
       </div>

@@ -1,7 +1,10 @@
 import { AnimatePresence, motion } from "motion/react";
 import { Shield, ArrowRight, Flag, MessageSquare, Scale, LogOut, Info, Bell, Gamepad2, Download, Trophy, FileText, Search, FileSearch, Building2, HeartPulse, PieChart } from "lucide-react";
 import { useEffect, useState } from "react";
-import { LeaderboardData } from "../types";
+import { useNavigate } from "react-router-dom";
+import { collection, query, orderBy, limit, onSnapshot } from "firebase/firestore";
+import { db } from "../firebase";
+import { LeaderboardData, Post } from "../types";
 
 interface HomeViewProps {
   onNavigateToTab: (tabIndex: number, chatModePreset?: string) => void;
@@ -41,9 +44,11 @@ const slides = [
 ];
 
 export default function HomeView({ onNavigateToTab }: HomeViewProps) {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<LeaderboardData | null>(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [latestPosts, setLatestPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     fetch("/api/leaderboard")
@@ -53,10 +58,24 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
   }, []);
 
   useEffect(() => {
+    // Fetch live discussions from user posts
+    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(2));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const postsData: Post[] = [];
+      snapshot.forEach((doc) => {
+        postsData.push({ id: doc.id, ...doc.data() } as Post);
+      });
+      setLatestPosts(postsData);
+    });
+
     const timer = setInterval(() => {
       setCurrentSlideIndex((prev) => (prev + 1) % slides.length);
     }, 4000);
-    return () => clearInterval(timer);
+    
+    return () => {
+      clearInterval(timer);
+      unsubscribe();
+    };
   }, []);
 
   return (
@@ -182,14 +201,14 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
           <span className="text-[10px] font-bold text-[#6B6458] uppercase tracking-wider truncate w-full text-center">KONSUL AI</span>
         </button>
 
-        <button onClick={() => onNavigateToTab(1, "Hak pekerja")} className="flex flex-col items-center gap-2 group cursor-pointer">
+        <button onClick={() => navigate("/hukum")} className="flex flex-col items-center gap-2 group cursor-pointer">
           <div className="w-14 h-14 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm w-full max-w-[56px]">
             <Scale className="w-6 h-6 fill-green-500 text-green-500" />
           </div>
           <span className="text-[10px] font-bold text-[#6B6458] uppercase tracking-wider truncate w-full text-center">HUKUM</span>
         </button>
 
-        <button onClick={() => onNavigateToTab(1, "Resign Checker")} className="flex flex-col items-center gap-2 group cursor-pointer">
+        <button onClick={() => navigate("/resign")} className="flex flex-col items-center gap-2 group cursor-pointer">
           <div className="w-14 h-14 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm w-full max-w-[56px]">
             <LogOut className="w-6 h-6 fill-orange-500 text-orange-500" />
           </div>
@@ -240,7 +259,7 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
       {/* QUICK NEW FEATURES BENTO */}
       <div className="grid grid-cols-2 gap-3 mt-3">
         {/* Simulasi Bos */}
-        <div className="relative bg-gradient-to-br from-[#1E5C3A] to-[#144229] rounded-[16px] p-4 shadow-sm overflow-hidden text-white flex flex-col justify-between h-24 cursor-pointer" onClick={() => onNavigateToTab(1, "Simulasi Negosiasi")}>
+        <div className="relative bg-gradient-to-br from-[#1E5C3A] to-[#144229] rounded-[16px] p-4 shadow-sm overflow-hidden text-white flex flex-col justify-between h-24 cursor-pointer" onClick={() => navigate("/simulasi-bos")}>
           <motion.div
             animate={{ x: ["-100%", "100%"] }}
             transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
@@ -257,7 +276,7 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
         </div>
 
         {/* Kalkulator Hak */}
-        <div className="relative bg-gradient-to-br from-[#8B5CF6] to-[#6D28D9] rounded-[16px] p-4 shadow-sm overflow-hidden text-white flex flex-col justify-between h-24 cursor-pointer" onClick={() => onNavigateToTab(1, "Hitung Hak")}>
+        <div className="relative bg-gradient-to-br from-[#8B5CF6] to-[#6D28D9] rounded-[16px] p-4 shadow-sm overflow-hidden text-white flex flex-col justify-between h-24 cursor-pointer" onClick={() => navigate("/kalkulator-hak")}>
           <motion.div
             animate={{ x: ["-100%", "100%"] }}
             transition={{ repeat: Infinity, duration: 3, delay: 1.5, ease: "linear" }}
@@ -274,7 +293,7 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
         </div>
 
         {/* Generator Surat */}
-        <div className="col-span-2 bg-gradient-to-r from-[#D35400] to-[#E67E22] rounded-[16px] p-4 shadow-sm relative overflow-hidden text-white flex items-center justify-between cursor-pointer group" onClick={() => onNavigateToTab(1, "Template Somasi")}>
+        <div className="col-span-2 bg-gradient-to-r from-[#D35400] to-[#E67E22] rounded-[16px] p-4 shadow-sm relative overflow-hidden text-white flex items-center justify-between cursor-pointer group" onClick={() => navigate("/template-somasi")}>
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
           <div className="flex items-center gap-3 relative z-10 min-w-0">
             <div className="bg-white/20 p-2.5 rounded-xl shrink-0">
@@ -358,42 +377,42 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
       <div className="space-y-3 pb-4 mt-4 w-full overflow-hidden">
         <h3 className="font-display font-bold text-sm text-[#2C2A26]">Pilih Kategori Utama</h3>
         <div className="flex overflow-x-auto gap-3 pb-2 scrollbar-hide w-full">
-          <button onClick={() => onNavigateToTab(1, "Hak pekerja")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
+          <button onClick={() => navigate("/hukum")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
             <div className="bg-purple-100 p-1.5 rounded-xl text-purple-600 shrink-0">
               <Scale className="w-4 h-4" />
             </div>
             <span className="font-bold text-[11px] tracking-wide text-[#2C2A26] truncate">Hak Ketenagakerjaan</span>
           </button>
 
-          <button onClick={() => onNavigateToTab(1, "Deteksi toxic")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
+          <button onClick={() => navigate("/deteksi-toxic")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
             <div className="bg-red-100 p-1.5 rounded-xl text-red-600 shrink-0">
               <Flag className="w-4 h-4" />
             </div>
             <span className="font-bold text-[11px] tracking-wide text-[#2C2A26] truncate">Deteksi Red Flags</span>
           </button>
 
-          <button onClick={() => onNavigateToTab(1, "Script bicara")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
+          <button onClick={() => navigate("/script-hrd")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
             <div className="bg-orange-100 p-1.5 rounded-xl text-orange-600 shrink-0">
               <MessageSquare className="w-4 h-4" />
             </div>
             <span className="font-bold text-[11px] tracking-wide text-[#2C2A26] truncate">Script HRD/Bos</span>
           </button>
 
-          <button onClick={() => onNavigateToTab(1, "Analisis kontrak")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
+          <button onClick={() => navigate("/analisis-kontrak")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
             <div className="bg-blue-100 p-1.5 rounded-xl text-blue-600 shrink-0">
               <FileSearch className="w-4 h-4" />
             </div>
             <span className="font-bold text-[11px] tracking-wide text-[#2C2A26] truncate">Analisis Kontrak</span>
           </button>
 
-          <button onClick={() => onNavigateToTab(1, "Lapor Disnaker")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
+          <button onClick={() => navigate("/lapor-disnaker")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
             <div className="bg-teal-100 p-1.5 rounded-xl text-teal-600 shrink-0">
               <Building2 className="w-4 h-4" />
             </div>
             <span className="font-bold text-[11px] tracking-wide text-[#2C2A26] truncate">Lapor Disnaker</span>
           </button>
 
-          <button onClick={() => onNavigateToTab(1, "Panduan BPJS")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
+          <button onClick={() => navigate("/panduan-bpjs")} className="flex items-center gap-2 bg-white border border-[#E2DDD4] rounded-2xl px-4 py-2 shadow-sm min-w-0 shrink-0 hover:bg-slate-50 transition-colors">
             <div className="bg-pink-100 p-1.5 rounded-xl text-pink-600 shrink-0">
               <HeartPulse className="w-4 h-4" />
             </div>
@@ -413,33 +432,29 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
         </div>
 
         <div className="flex flex-col gap-2">
-          <div className="bg-white border border-[#E2DDD4] rounded-[12px] p-3 shadow-sm cursor-pointer hover:bg-slate-50 transition" onClick={() => onNavigateToTab(2)}>
-            <div className="flex justify-between items-start mb-1.5">
-              <span className="text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tanya Hukum</span>
-              <span className="text-[10px] text-[#A09880]">2 mnt lalu</span>
+          {latestPosts.length === 0 ? (
+            <div className="bg-white border border-[#E2DDD4] p-4 rounded-xl text-center shadow-sm">
+              <span className="text-[#A09880] text-xs">Belum ada diskusi terbaru.</span>
             </div>
-            <p className="text-xs font-medium text-[#2C2A26] line-clamp-2 leading-snug">
-              Sore min, saya mau nanya. Bos saya tiba-tiba motong gaji 20% karena alasan target gak tercapai, padahal di kontrak gak ada aturan pemotongan...
-            </p>
-            <div className="flex items-center gap-2 mt-2 text-[#A09880]">
-              <span className="flex items-center gap-1 text-[10px]"><MessageSquare className="w-3 h-3" /> 12 Tanggapan</span>
-              <ArrowRight className="w-3 h-3 text-blue-500" />
-            </div>
-          </div>
-
-          <div className="bg-white border border-[#E2DDD4] rounded-[12px] p-3 shadow-sm cursor-pointer hover:bg-slate-50 transition" onClick={() => onNavigateToTab(2)}>
-            <div className="flex justify-between items-start mb-1.5">
-              <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Red Flag Alert</span>
-              <span className="text-[10px] text-[#A09880]">15 mnt lalu</span>
-            </div>
-            <p className="text-xs font-medium text-[#2C2A26] line-clamp-2 leading-snug">
-              Hati-hati buat temen-temen yg apply di PT *** daerah Jaksel. Tadi siang interview malah disuruh tahan ijazah asli, terus dipaksa ttd kontrak hari itu juga.
-            </p>
-            <div className="flex items-center gap-2 mt-2 text-[#A09880]">
-              <span className="flex items-center gap-1 text-[10px]"><MessageSquare className="w-3 h-3" /> 45 Tanggapan</span>
-              <ArrowRight className="w-3 h-3 text-blue-500" />
-            </div>
-          </div>
+          ) : (
+            latestPosts.map((post) => (
+              <div key={post.id} className="bg-white border border-[#E2DDD4] rounded-[12px] p-3 shadow-sm cursor-pointer hover:bg-slate-50 transition" onClick={() => onNavigateToTab(2)}>
+                <div className="flex justify-between items-start mb-1.5">
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${post.category === 'Red Flag' ? 'text-red-600 bg-red-50' : 'text-orange-600 bg-orange-50'}`}>
+                    {post.category || "Tanya Hukum"}
+                  </span>
+                  <span className="text-[10px] text-[#A09880]">{post.time}</span>
+                </div>
+                <p className="text-xs font-medium text-[#2C2A26] line-clamp-2 leading-snug">
+                  {post.content}
+                </p>
+                <div className="flex items-center gap-2 mt-2 text-[#A09880]">
+                  <span className="flex items-center gap-1 text-[10px]"><MessageSquare className="w-3 h-3" /> {post.replies?.length || 0} Tanggapan</span>
+                  <ArrowRight className="w-3 h-3 text-blue-500" />
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
@@ -450,34 +465,51 @@ export default function HomeView({ onNavigateToTab }: HomeViewProps) {
             <PieChart className="w-3.5 h-3.5 text-blue-500" />
             Suara Pekerja (Polling)
           </h3>
-          <span className="text-[10px] text-[#A09880] font-bold border border-[#E2DDD4] px-1.5 py-0.5 rounded-md bg-white">1.204 Suara</span>
+          <span className="text-[10px] text-[#A09880] font-bold border border-[#E2DDD4] px-1.5 py-0.5 rounded-md bg-white">
+            {stats ? stats.curhatCount.toLocaleString("id-ID") : "1.204"} Suara
+          </span>
         </div>
 
         <div className="bg-gradient-to-br from-white to-[#F7F3EC] border border-[#E2DDD4] rounded-[12px] p-3 shadow-sm">
-          <p className="text-xs font-bold text-[#2C2A26] mb-2.5 leading-snug">Apakah kantormu bayar uang lembur sesuai aturan Undang-Undang?</p>
+          <p className="text-xs font-bold text-[#2C2A26] mb-2.5 leading-snug">Dari seluruh laporan, apa masalah utama di tempat kerjamu?</p>
 
           <div className="space-y-2">
             <button className="w-full relative bg-white border border-[#E2DDD4] rounded-lg p-2 text-left overflow-hidden group hover:border-blue-400 transition-colors cursor-pointer">
-              <div className="absolute top-0 left-0 h-full bg-blue-100/60 w-[12%] group-hover:bg-blue-200/50 transition-colors"></div>
+              <div 
+                className="absolute top-0 left-0 h-full bg-blue-100/60 transition-all duration-1000" 
+                style={{ width: stats ? `${Math.round((stats.topProblems.lembur / stats.curhatCount) * 100)}%` : '45%' }}
+              ></div>
               <div className="relative z-10 flex justify-between items-center px-1">
-                <span className="text-[11px] font-semibold text-[#2C2A26]">Sesuai aturan (Pasti dibayar)</span>
-                <span className="text-[10px] font-bold text-blue-600">12%</span>
+                <span className="text-[11px] font-semibold text-[#2C2A26]">Lembur Tidak Dibayar</span>
+                <span className="text-[10px] font-bold text-blue-600">
+                  {stats ? Math.round((stats.topProblems.lembur / stats.curhatCount) * 100) : 45}%
+                </span>
               </div>
             </button>
 
             <button className="w-full relative bg-white border border-[#E2DDD4] rounded-lg p-2 text-left overflow-hidden group hover:border-blue-400 transition-colors cursor-pointer">
-              <div className="absolute top-0 left-0 h-full bg-blue-100/60 w-[24%] group-hover:bg-blue-200/50 transition-colors"></div>
+              <div 
+                className="absolute top-0 left-0 h-full bg-red-100/60 transition-all duration-1000" 
+                style={{ width: stats ? `${Math.round((stats.topProblems.toxicBoss / stats.curhatCount) * 100)}%` : '30%' }}
+              ></div>
               <div className="relative z-10 flex justify-between items-center px-1">
-                <span className="text-[11px] font-semibold text-[#2C2A26]">Hitungan flat mingguan</span>
-                <span className="text-[10px] font-bold text-blue-600">24%</span>
+                <span className="text-[11px] font-semibold text-[#2C2A26]">Atasan Toxic / Gaslighting</span>
+                <span className="text-[10px] font-bold text-red-600">
+                  {stats ? Math.round((stats.topProblems.toxicBoss / stats.curhatCount) * 100) : 30}%
+                </span>
               </div>
             </button>
 
             <button className="w-full relative bg-white border border-[#E2DDD4] rounded-lg p-2 text-left overflow-hidden group hover:border-blue-400 transition-colors cursor-pointer">
-              <div className="absolute top-0 left-0 h-full bg-blue-100/60 w-[64%] group-hover:bg-blue-200/50 transition-colors"></div>
+              <div 
+                className="absolute top-0 left-0 h-full bg-orange-100/60 transition-all duration-1000" 
+                style={{ width: stats ? `${Math.round((stats.topProblems.gaji / stats.curhatCount) * 100)}%` : '25%' }}
+              ></div>
               <div className="relative z-10 flex justify-between items-center px-1">
-                <span className="text-[11px] font-semibold text-[#2C2A26]">Sama sekali tidak dibayar (Loyalitas)</span>
-                <span className="text-[10px] font-bold text-blue-600">64%</span>
+                <span className="text-[11px] font-semibold text-[#2C2A26]">Pemotongan Gaji Sepihak</span>
+                <span className="text-[10px] font-bold text-orange-600">
+                  {stats ? Math.round((stats.topProblems.gaji / stats.curhatCount) * 100) : 25}%
+                </span>
               </div>
             </button>
           </div>
